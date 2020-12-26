@@ -32,6 +32,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         return
       }
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
+      console.log(responseHeaders, 35)
+
       const responseData =
         responseType !== 'text' ? request.response : request.responseText
 
@@ -62,10 +64,12 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     Object.keys(headers).forEach(name => {
+      request.setRequestHeader(name, headers[name])
+
       if (data === null && name.toLowerCase() === 'content-type') {
         delete headers[name]
       } else {
-        request.setRequestHeader(name, headers[name])
+        console.log(config, 70)
       }
     })
 

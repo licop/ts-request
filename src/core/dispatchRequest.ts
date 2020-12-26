@@ -1,7 +1,12 @@
 import { buildUrl } from '../helpers/url'
-import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
+import {
+  AxiosRequestConfig,
+  AxiosPromise,
+  AxiosResponse,
+  Method
+} from '../types'
 import { transformRequest, transformResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
+import { flattenHeaders, processHeaders } from '../helpers/headers'
 import xhr from './xhr'
 
 export default function dispatchRequest(
@@ -17,6 +22,7 @@ function processConfig(config: AxiosRequestConfig): void {
   config.url = transformURL(config)
   config.headers = transformHeaders(config)
   config.data = transformRequestData(config)
+  config.headers = flattenHeaders(config.headers, config.method as Method)
 }
 
 function transformURL(config: AxiosRequestConfig): string {
