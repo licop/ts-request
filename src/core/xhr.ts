@@ -10,7 +10,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       method = 'get',
       headers,
       responseType,
-      timeout
+      timeout,
+      cancelToken
     } = config
     const request = new XMLHttpRequest()
 
@@ -32,7 +33,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         return
       }
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-      console.log(responseHeaders, 35)
 
       const responseData =
         responseType !== 'text' ? request.response : request.responseText
@@ -64,14 +64,19 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     Object.keys(headers).forEach(name => {
-      request.setRequestHeader(name, headers[name])
-
       if (data === null && name.toLowerCase() === 'content-type') {
         delete headers[name]
       } else {
-        console.log(config, 70)
+        request.setRequestHeader(name, headers[name])
       }
     })
+
+    if (cancelToken) {
+      cancelToken.promise.then(reason => {
+        request.abort()
+        reject(reason)
+      })
+    }
 
     request.send(data)
 
