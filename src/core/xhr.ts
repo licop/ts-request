@@ -1,6 +1,8 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -11,16 +13,23 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       headers,
       responseType,
       timeout,
-      cancelToken
+      cancelToken,
+      withCredentials,
+
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
     const request = new XMLHttpRequest()
 
     if (responseType) {
       request.responseType = responseType
     }
-
     if (timeout) {
       request.timeout = timeout
+    }
+    // withCredentials 设置为true 跨域可以携带cookie
+    if (withCredentials) {
+      request.withCredentials = withCredentials
     }
 
     request.open(method.toUpperCase(), url!, true)
@@ -36,7 +45,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
       const responseData =
         responseType !== 'text' ? request.response : request.responseText
-
       const response: AxiosResponse = {
         data: responseData,
         status: request.status,
@@ -47,6 +55,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
       handleResponse(response)
     }
+
     // 网络错误
     request.onerror = function handleError() {
       reject(createError('Network Error', config, null, request))
@@ -61,6 +70,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           request
         )
       )
+    }
+
+    if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+      const xsrfValue = cookie.read(xsrfCookieName)
+      if (xsrfValue && xsrfHeaderName) {
+        headers[xsrfHeaderName] = xsrfValue
+      }
     }
 
     Object.keys(headers).forEach(name => {

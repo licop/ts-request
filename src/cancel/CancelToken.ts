@@ -13,7 +13,7 @@ export default class CancelToken {
     let resolvePromise: ResolvePromise
 
     this.promise = new Promise<Cancel>(resolve => {
-      resolvePromise = resolve
+      ;(resolvePromise as any) = resolve
     })
 
     executor(message => {
@@ -36,6 +36,7 @@ export default class CancelToken {
       token
     }
   }
+
   throwIfRequested(): void {
     if (this.reason) {
       throw this.reason
