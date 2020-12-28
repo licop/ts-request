@@ -1,2 +1,3 @@
 # ts-request
-typescript实现一个基于promise 的HTTP 请求库
+
+Typescript 实现一个基于 promise 的 HTTP 请求库

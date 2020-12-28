@@ -1,16 +1,16 @@
+import { isPlainObject, deepMerge } from './utils'
 import { Method } from '../types'
-import { deepMerge, isPlainObject } from './utils'
 
-function normalizeHeaderName(headers: any, normalizeName: string): void {
+function normalizeHeaderName(headers: any, normalizedName: string): void {
   if (!headers) {
     return
   }
   Object.keys(headers).forEach(name => {
     if (
-      normalizeName !== name &&
-      normalizeName.toUpperCase() === name.toUpperCase()
+      name !== normalizedName &&
+      name.toUpperCase() === normalizedName.toUpperCase()
     ) {
-      headers[normalizeName] = headers[name]
+      headers[normalizedName] = headers[name]
       delete headers[name]
     }
   })
@@ -21,30 +21,28 @@ export function processHeaders(headers: any, data: any): any {
 
   if (isPlainObject(data)) {
     if (headers && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json;charest=utf-8'
+      headers['Content-Type'] = 'application/json;charset=utf-8'
     }
   }
-
   return headers
 }
 
 export function parseHeaders(headers: string): any {
   let parsed = Object.create(null)
-
   if (!headers) {
     return parsed
   }
+
   headers.split('\r\n').forEach(line => {
-    let [key, val] = line.split(':')
+    let [key, ...vals] = line.split(':')
     key = key.trim().toLowerCase()
     if (!key) {
       return
     }
-    if (val) {
-      val = val.trim()
-    }
+    const val = vals.join(':').trim()
     parsed[key] = val
   })
+
   return parsed
 }
 
@@ -64,6 +62,7 @@ export function flattenHeaders(headers: any, method: Method): any {
     'patch',
     'common'
   ]
+
   methodsToDelete.forEach(method => {
     delete headers[method]
   })

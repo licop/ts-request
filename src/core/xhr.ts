@@ -2,6 +2,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
 import { isURLSameOrigin } from '../helpers/url'
+import { isFormData } from '../helpers/utils'
 import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -17,87 +18,126 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       withCredentials,
 
       xsrfCookieName,
-      xsrfHeaderName
-    } = config
-    const request = new XMLHttpRequest()
+      xsrfHeaderName,
 
-    if (responseType) {
-      request.responseType = responseType
-    }
-    if (timeout) {
-      request.timeout = timeout
-    }
-    // withCredentials 设置为true 跨域可以携带cookie
-    if (withCredentials) {
-      request.withCredentials = withCredentials
-    }
+      onDownloadProgress,
+      onUploadProgress,
+      validateStatus,
+      auth
+    } = config
+
+    const request = new XMLHttpRequest()
 
     request.open(method.toUpperCase(), url!, true)
 
-    request.onreadystatechange = function handleLoad() {
-      if (request.readyState !== 4) {
-        return
-      }
-      if (request.status === 0) {
-        return
-      }
-      const responseHeaders = parseHeaders(request.getAllResponseHeaders())
+    configureRequest()
+    addEvent()
+    processHeaders()
+    processCancel()
+    request.send(data)
 
-      const responseData =
-        responseType !== 'text' ? request.response : request.responseText
-      const response: AxiosResponse = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config,
-        request
+    function configureRequest(): void {
+      if (responseType) {
+        request.responseType = responseType
       }
-      handleResponse(response)
-    }
-
-    // 网络错误
-    request.onerror = function handleError() {
-      reject(createError('Network Error', config, null, request))
-    }
-    // 处理超时错误
-    request.ontimeout = function handleTimeout() {
-      reject(
-        createError(
-          `Timeout of ${timeout}ms exceeded`,
-          config,
-          'ECONNABORTED',
-          request
-        )
-      )
-    }
-
-    if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
-      const xsrfValue = cookie.read(xsrfCookieName)
-      if (xsrfValue && xsrfHeaderName) {
-        headers[xsrfHeaderName] = xsrfValue
+      if (timeout) {
+        request.timeout = timeout
+      }
+      // withCredentials 设置为true 跨域可以携带cookie
+      if (withCredentials) {
+        request.withCredentials = withCredentials
       }
     }
 
-    Object.keys(headers).forEach(name => {
-      if (data === null && name.toLowerCase() === 'content-type') {
-        delete headers[name]
-      } else {
-        request.setRequestHeader(name, headers[name])
+    function processHeaders(): void {
+      if (isFormData(data)) {
+        delete headers['Content-Type']
       }
-    })
 
-    if (cancelToken) {
-      cancelToken.promise.then(reason => {
-        request.abort()
-        reject(reason)
+      if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+        const xsrfValue = cookie.read(xsrfCookieName)
+        if (xsrfValue && xsrfHeaderName) {
+          headers[xsrfHeaderName] = xsrfValue
+        }
+      }
+
+      // HTTP协议中的 Authorization 请求消息头
+      if (auth) {
+        headers['Authorization'] =
+          'Basic ' + btoa(auth.username + ':' + auth.password)
+      }
+
+      Object.keys(headers).forEach(name => {
+        if (data === null && name.toLowerCase() === 'content-type') {
+          delete headers[name]
+        } else {
+          request.setRequestHeader(name, headers[name])
+        }
       })
     }
 
-    request.send(data)
+    function addEvent(): void {
+      request.onreadystatechange = function handleLoad() {
+        if (request.readyState !== 4) {
+          return
+        }
+        if (request.status === 0) {
+          return
+        }
+        const responseHeaders = parseHeaders(request.getAllResponseHeaders())
+
+        const responseData =
+          responseType && responseType !== 'text'
+            ? request.response
+            : request.responseText
+
+        const response: AxiosResponse = {
+          data: responseData,
+          status: request.status,
+          statusText: request.statusText,
+          headers: responseHeaders,
+          config,
+          request
+        }
+        handleResponse(response)
+      }
+
+      // 网络错误
+      request.onerror = function handleError() {
+        reject(createError('Network Error', config, null, request))
+      }
+      // 处理超时错误
+      request.ontimeout = function handleTimeout() {
+        reject(
+          createError(
+            `Timeout of ${timeout}ms exceeded`,
+            config,
+            'ECONNABORTED',
+            request
+          )
+        )
+      }
+
+      if (onDownloadProgress) {
+        request.onprogress = onDownloadProgress
+      }
+
+      if (onUploadProgress) {
+        request.upload.onprogress = onUploadProgress
+      }
+    }
+
+    function processCancel(): void {
+      if (cancelToken) {
+        cancelToken.promise.then(reason => {
+          request.abort()
+          reject(reason)
+        })
+      }
+    }
 
     function handleResponse(response: AxiosResponse): void {
-      if (response.status >= 200 && response.status < 300) {
+      if (!validateStatus || validateStatus(response.status)) {
         resolve(response)
       } else {
         reject(
