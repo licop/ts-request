@@ -1,4 +1,4 @@
-import { isPlainObject, deepMerge } from './utils'
+import { isPlainObject, deepMerge } from './util'
 import { Method } from '../types'
 
 function normalizeHeaderName(headers: any, normalizedName: string): void {

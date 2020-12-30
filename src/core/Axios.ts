@@ -36,14 +36,15 @@ export default class Axios {
     if (typeof url === 'string') {
       if (!config) {
         config = {}
-      } else {
-        config.url = url
       }
+      config.url = url
     } else {
       config = url
     }
 
     config = mergeConfig(this.defaults, config)
+    config.method = config.method.toLowerCase()
+
     const chain: PromiseChain<any>[] = [
       {
         resolved: dispatchRequest,

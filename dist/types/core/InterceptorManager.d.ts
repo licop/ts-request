@@ -1,0 +1,16 @@
+/**
+ * 拦截器管理类
+ */
+import { RejectedFn, ResolvedFn } from '../types';
+interface Interceptor<T> {
+    resolved: ResolvedFn<T>;
+    rejected?: RejectedFn;
+}
+export default class InterceptorManager<T> {
+    private interceptors;
+    constructor();
+    use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number;
+    forEach(fn: (interceptors: Interceptor<T>) => void): void;
+    eject(id: number): void;
+}
+export {};

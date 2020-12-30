@@ -1,4 +1,4 @@
-import { isDate, isPlainObject, isURLSearchParams } from './utils'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string
@@ -16,7 +16,7 @@ function encode(val: string): string {
     .replace(/%5D/gi, ']')
 }
 
-export function buildUrl(
+export function buildURL(
   url: string,
   params?: any,
   paramsSerializer?: (params: any) => string

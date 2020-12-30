@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
 import { isURLSameOrigin } from '../helpers/url'
-import { isFormData } from '../helpers/utils'
+import { isFormData } from '../helpers/util'
 import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -11,7 +11,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       data = null,
       url,
       method = 'get',
-      headers,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
@@ -27,7 +27,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     } = config
 
     const request = new XMLHttpRequest()
-
     request.open(method.toUpperCase(), url!, true)
 
     configureRequest()
@@ -46,6 +45,58 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // withCredentials 设置为true 跨域可以携带cookie
       if (withCredentials) {
         request.withCredentials = withCredentials
+      }
+    }
+
+    function addEvent(): void {
+      request.onreadystatechange = function handleLoad() {
+        if (request.readyState !== 4) {
+          return
+        }
+        if (request.status === 0) {
+          return
+        }
+
+        const responseHeaders = parseHeaders(request.getAllResponseHeaders())
+
+        const responseData =
+          responseType && responseType !== 'text'
+            ? request.response
+            : request.responseText
+
+        const response: AxiosResponse = {
+          data: responseData,
+          status: request.status,
+          statusText: request.statusText,
+          headers: responseHeaders,
+          config,
+          request
+        }
+        handleResponse(response)
+      }
+
+      // 网络错误
+      request.onerror = function handleError() {
+        reject(createError('Network Error', config, null, request))
+      }
+      // 处理超时错误
+      request.ontimeout = function handleTimeout() {
+        reject(
+          createError(
+            `Timeout of ${timeout} ms exceeded`,
+            config,
+            'ECONNABORTED',
+            request
+          )
+        )
+      }
+
+      if (onDownloadProgress) {
+        request.onprogress = onDownloadProgress
+      }
+
+      if (onUploadProgress) {
+        request.upload.onprogress = onUploadProgress
       }
     }
 
@@ -76,63 +127,19 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       })
     }
 
-    function addEvent(): void {
-      request.onreadystatechange = function handleLoad() {
-        if (request.readyState !== 4) {
-          return
-        }
-        if (request.status === 0) {
-          return
-        }
-        const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-
-        const responseData =
-          responseType && responseType !== 'text'
-            ? request.response
-            : request.responseText
-
-        const response: AxiosResponse = {
-          data: responseData,
-          status: request.status,
-          statusText: request.statusText,
-          headers: responseHeaders,
-          config,
-          request
-        }
-        handleResponse(response)
-      }
-
-      // 网络错误
-      request.onerror = function handleError() {
-        reject(createError('Network Error', config, null, request))
-      }
-      // 处理超时错误
-      request.ontimeout = function handleTimeout() {
-        reject(
-          createError(
-            `Timeout of ${timeout}ms exceeded`,
-            config,
-            'ECONNABORTED',
-            request
-          )
-        )
-      }
-
-      if (onDownloadProgress) {
-        request.onprogress = onDownloadProgress
-      }
-
-      if (onUploadProgress) {
-        request.upload.onprogress = onUploadProgress
-      }
-    }
-
     function processCancel(): void {
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next */
+            () => {
+              // do nothing
+            }
+          )
       }
     }
 

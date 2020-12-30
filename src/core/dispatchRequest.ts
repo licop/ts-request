@@ -1,4 +1,4 @@
-import { buildUrl, combineURL, isAbsoluteURL } from '../helpers/url'
+import { buildURL, combineURL, isAbsoluteURL } from '../helpers/url'
 import {
   AxiosRequestConfig,
   AxiosPromise,
@@ -14,9 +14,17 @@ export default function dispatchRequest(
 ): AxiosPromise {
   throwIfCancellationRequested(config)
   processConfig(config)
-  return xhr(config).then(res => {
-    return transformResponseData(res)
-  })
+  return xhr(config).then(
+    res => {
+      return transformResponseData(res)
+    },
+    e => {
+      if (e && e.response) {
+        e.response = transformResponseData(e.response)
+      }
+      return Promise.reject(e)
+    }
+  )
 }
 
 function processConfig(config: AxiosRequestConfig): void {
@@ -26,12 +34,12 @@ function processConfig(config: AxiosRequestConfig): void {
 }
 
 export function transformURL(config: AxiosRequestConfig): string {
-  let { url, params, paramsSerializer, baseUrl } = config
-  if (baseUrl && !isAbsoluteURL(url!)) {
-    url = combineURL(baseUrl, url)
+  let { url, params, paramsSerializer, baseURL } = config
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
   }
   // 类型断言 url不是空
-  return buildUrl(url!, params, paramsSerializer)
+  return buildURL(url!, params, paramsSerializer)
 }
 
 function transformResponseData(res: AxiosResponse): AxiosResponse {

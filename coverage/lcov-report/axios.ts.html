@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for axios.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> axios.ts
+    </h1>
+    <div class='clearfix'>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AxiosRequestConfig, AxiosStatic } from './types'
+<span class="cstat-no" title="statement not covered" >import Axios from './core/Axios'</span>
+<span class="cstat-no" title="statement not covered" >import { extend } from './helpers/utils'</span>
+<span class="cstat-no" title="statement not covered" >import defaults from './defaults'</span>
+<span class="cstat-no" title="statement not covered" >import mergeConfig from './core/mergeConfig'</span>
+<span class="cstat-no" title="statement not covered" >import CancelToken from './cancel/CancelToken'</span>
+<span class="cstat-no" title="statement not covered" >import Cancel, { isCancel } from './cancel/Cancel'</span>
+&nbsp;
+function <span class="fstat-no" title="function not covered" >createInstance(</span>config: AxiosRequestConfig): AxiosStatic {
+  const context = <span class="cstat-no" title="statement not covered" >new Axios(config)</span>
+  const instance = <span class="cstat-no" title="statement not covered" >Axios.prototype.request.bind(context)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  extend(instance, context)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return instance as AxiosStatic</span>
+}
+&nbsp;
+const axios = <span class="cstat-no" title="statement not covered" >createInstance(defaults)</span>
+<span class="cstat-no" title="statement not covered" >axios.create = function <span class="fstat-no" title="function not covered" >create(</span>config) {</span>
+<span class="cstat-no" title="statement not covered" >  return createInstance(mergeConfig(defaults, config))</span>
+}
+<span class="cstat-no" title="statement not covered" >axios.CancelToken = CancelToken</span>
+<span class="cstat-no" title="statement not covered" >axios.Cancel = Cancel</span>
+<span class="cstat-no" title="statement not covered" >axios.isCancel = isCancel</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >axios.all = function <span class="fstat-no" title="function not covered" >all(</span>promises) {</span>
+<span class="cstat-no" title="statement not covered" >  return Promise.all(promises)</span>
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >axios.spread = function <span class="fstat-no" title="function not covered" >spread(</span>callback) {</span>
+<span class="cstat-no" title="statement not covered" >  return function <span class="fstat-no" title="function not covered" >wrap(</span>arr) {</span>
+<span class="cstat-no" title="statement not covered" >    return callback.apply(null, arr)</span>
+  }
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >axios.Axios = Axios</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >export default axios</span>
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Dec 30 2020 10:18:59 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>
