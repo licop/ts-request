@@ -56,13 +56,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         if (request.status === 0) {
           return
         }
-
+        // 获取相应头数据
         const responseHeaders = parseHeaders(request.getAllResponseHeaders())
 
         const responseData =
           responseType && responseType !== 'text'
             ? request.response
             : request.responseText
+        // 设置响应数据格式
 
         const response: AxiosResponse = {
           data: responseData,
@@ -100,6 +101,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
     }
 
+    // 设置请求头
     function processHeaders(): void {
       if (isFormData(data)) {
         delete headers['Content-Type']
@@ -119,6 +121,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
 
       Object.keys(headers).forEach(name => {
+        // 如何data是空不设置Content-type
         if (data === null && name.toLowerCase() === 'content-type') {
           delete headers[name]
         } else {
@@ -145,6 +148,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function handleResponse(response: AxiosResponse): void {
       if (!validateStatus || validateStatus(response.status)) {
+        // 返回响应数据
         resolve(response)
       } else {
         reject(

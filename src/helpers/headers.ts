@@ -1,6 +1,7 @@
 import { isPlainObject, deepMerge } from './util'
 import { Method } from '../types'
 
+// 将headers属性变成大写
 function normalizeHeaderName(headers: any, normalizedName: string): void {
   if (!headers) {
     return
@@ -15,7 +16,7 @@ function normalizeHeaderName(headers: any, normalizedName: string): void {
     }
   })
 }
-
+// 处理请求headers，如何没有设置Content-Type属性，需要自动设置请求header的Content-type字段为application/json;charset=utf-8
 export function processHeaders(headers: any, data: any): any {
   normalizeHeaderName(headers, 'Content-Type')
 
@@ -27,6 +28,7 @@ export function processHeaders(headers: any, data: any): any {
   return headers
 }
 
+// 把通过XMLHttpRequest对象的getAllResponseHeader获取的字符串转化成对象格式
 export function parseHeaders(headers: string): any {
   let parsed = Object.create(null)
   if (!headers) {

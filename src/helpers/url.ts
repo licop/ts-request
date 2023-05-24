@@ -1,3 +1,5 @@
+// 处理请求url参数，把params拼接到url上
+
 import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
@@ -42,6 +44,7 @@ export function buildURL(
         values = val
         key += '[]'
       } else {
+        // 如果不是数组转化为数组，方便遍历
         values = [val]
       }
       values.forEach(val => {
@@ -58,10 +61,12 @@ export function buildURL(
   }
 
   if (serializedParams) {
+    // 把hash后面的字符忽略掉
     const markIndex = url.indexOf('#')
     if (markIndex !== -1) {
       url = url.slice(0, markIndex)
     }
+    // 如果url有?直接链接字符串
     url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams
   }
 

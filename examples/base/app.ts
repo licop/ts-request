@@ -7,14 +7,15 @@ import axios from '../../src/index'
 //     foo: ['bar', 'baz']
 //   }
 // })
-// //
+// // //
 // axios({
 //   method: 'get',
 //   url: '/base/get',
 //   params: {
 //     foo: {
 //       bar: 'baz'
-//     }
+//     },
+//     foo1: 'baz1'
 //   }
 // })
 
@@ -88,7 +89,7 @@ axios({
 })
 //
 // const arr = new Int32Array([21, 31])
-//
+
 // axios({
 //   method: 'post',
 //   url: '/base/buffer',
@@ -96,11 +97,11 @@ axios({
 // })
 //
 //
-// const paramsString = 'q=URLUtils.searchParams&topic=api'
-// const searchParams = new URLSearchParams(paramsString)
+const paramsString = 'q=URLUtils.searchParams&topic=api'
+const searchParams = new URLSearchParams(paramsString)
 
-// axios({
-//   method: 'post',
-//   url: '/base/post',
-//   data: searchParams
-// })
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: searchParams
+})

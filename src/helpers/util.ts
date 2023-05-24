@@ -1,5 +1,6 @@
 const toString = Object.prototype.toString
 
+// 类型谓词保护
 export function isDate(val: any): val is Date {
   return toString.call(val) === '[object Date]'
 }

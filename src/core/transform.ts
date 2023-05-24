@@ -1,5 +1,6 @@
 import { AxiosTransformer } from '../types'
 
+// 对data和headers进行处理
 export default function transform(
   data: any,
   headers: any,
