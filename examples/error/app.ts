@@ -17,7 +17,7 @@ axios({
 }).catch((e) => {
   console.log(e)
 })
-
+// 测试网络错误
 setTimeout(() => {
   axios({
     method: 'get',

@@ -76,7 +76,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         handleResponse(response)
       }
 
-      // 网络错误
+      // 处理网络错误
       request.onerror = function handleError() {
         reject(createError('Network Error', config, null, request))
       }
@@ -147,6 +147,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     function handleResponse(response: AxiosResponse): void {
+      // 验证状态码 默认status >= 200 && status < 300
       if (!validateStatus || validateStatus(response.status)) {
         // 返回响应数据
         resolve(response)

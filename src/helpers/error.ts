@@ -1,5 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from '../types'
 
+// 创建AxiosError类，进行错误信息增强
 export class AxiosError extends Error {
   isAxiosError: boolean
   config: AxiosRequestConfig
@@ -21,7 +22,7 @@ export class AxiosError extends Error {
     this.request = request
     this.response = response
     this.isAxiosError = true
-
+    // 用于修复typescript的bug
     Object.setPrototypeOf(this, AxiosError.prototype)
   }
 }
@@ -35,5 +36,6 @@ export function createError(
   response?: AxiosResponse
 ) {
   const error = new AxiosError(message, config, code, request, response)
+
   return error
 }
