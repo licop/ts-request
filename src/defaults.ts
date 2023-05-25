@@ -1,3 +1,4 @@
+// 默认配置，每次发送请求，用户传递的配置可以和默认配置做合并
 import { AxiosRequestConfig } from './types'
 import { processHeaders } from './helpers/headers'
 import { transformRequest, transformResponse } from './helpers/data'
@@ -12,14 +13,14 @@ const defaults: AxiosRequestConfig = {
   },
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
-
+  // 请求数据转换
   transformRequest: [
     function(data: any, headers: any): any {
       processHeaders(headers, data)
       return transformRequest(data)
     }
   ],
-
+  // 相应数据转换
   transformResponse: [
     function(data: any): any {
       return transformResponse(data)

@@ -25,6 +25,7 @@ export function extend<T, U>(to: T, from: U): T & U {
   return to as T & U
 }
 
+// 深拷贝
 export function deepMerge(...objs: any[]): any {
   const result = Object.create(null)
 

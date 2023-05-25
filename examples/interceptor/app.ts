@@ -1,5 +1,6 @@
 import axios from '../../src/index'
 
+// headers.test 为2132， 先添加的后执行
 axios.interceptors.request.use(config => {
   config.params={name: 'licop'}
 

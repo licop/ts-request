@@ -1,6 +1,8 @@
 /**
  * 拦截器管理类
  */
+// 整个拦截器调用过程是一个链式调用的方式，每个拦截器都可以支持同步和异步处理，可以通过使用Promise链的方式来实现整个调用过程
+// 请求拦截器resolve函数处理的是config对象，相应拦截器resolve函数处理的是response对象
 
 import { RejectedFn, ResolvedFn } from '../types'
 

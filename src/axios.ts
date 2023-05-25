@@ -20,9 +20,12 @@ function createInstance(config: AxiosRequestConfig): AxiosStatic {
 
 const axios = createInstance(defaults)
 
+// 通过axios.create允许我们创建新的axios实例
+// 传入新的配置和默认配置合并，作为新的默认配置
 axios.create = function create(config) {
   return createInstance(mergeConfig(defaults, config))
 }
+
 axios.CancelToken = CancelToken
 axios.Cancel = Cancel
 axios.isCancel = isCancel

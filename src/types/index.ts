@@ -111,6 +111,7 @@ export interface AxiosStatic extends AxiosInstance {
   Axios: AxiosClassStatic
 }
 
+// 用于给外部使用的接口
 export interface AxiosInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
 

@@ -1,9 +1,14 @@
+// 策略模式的应用
+
+// 默认配置和自定义配置合并策略
 import { deepMerge, isPlainObject } from '../helpers/util'
 import { AxiosRequestConfig } from '../types'
 
 const strats = Object.create(null)
 
 // 配置合并策略
+
+// 默认合并策略
 function defaultStrat(val1: any, val2: any): any {
   return typeof val2 !== 'undefined' ? val2 : val1
 }
@@ -14,6 +19,7 @@ function fromVal2Strat(val1: any, val2: any): any {
   }
 }
 
+// 深拷贝
 function deepMergeStrat(val1: any, val2: any): any {
   if (isPlainObject(val2)) {
     return deepMerge(val1, val2)
@@ -56,6 +62,7 @@ export default function mergeConfig(
   }
 
   function mergeField(key: string): void {
+    // 根据key获取不同的策略
     const strat = strats[key] || defaultStrat
     config[key] = strat(config1[key], config2![key])
   }
