@@ -33,12 +33,14 @@ export default class Axios {
   }
 
   request(url: any, config?: any): AxiosPromise {
+    // 判断是否传入url
     if (typeof url === 'string') {
       if (!config) {
         config = {}
       }
       config.url = url
     } else {
+      // 直接传入config
       config = url
     }
 

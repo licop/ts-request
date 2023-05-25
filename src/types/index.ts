@@ -36,7 +36,7 @@ export interface AxiosRequestConfig {
 }
 
 export interface AxiosResponse<T = any> {
-  data: any
+  data: T
   status: number
   statusText: string
   headers: any
@@ -73,6 +73,7 @@ export interface Axios {
     data?: any,
     config?: AxiosRequestConfig
   ): AxiosPromise<T>
+
   put<T = any>(
     url: string,
     data?: any,

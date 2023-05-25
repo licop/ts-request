@@ -87,7 +87,8 @@ async function test() {
     // }
     const user = await getUser<User>()
     if (user) {
-        console.log(user.result.name)
+      console.log(user.result.name)
     }
 }
+
 test();
