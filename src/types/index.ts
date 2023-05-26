@@ -129,7 +129,7 @@ export interface RejectedFn {
 export interface AxiosTransformer {
   (data: any, headers?: any): any
 }
-
+// CancelToken的实例类型
 export interface CancelToken {
   promise: Promise<Cancel>
   reason?: Cancel
@@ -150,6 +150,7 @@ export interface CancelTokenSource {
   cancel: Canceler
 }
 
+// CancelToken的类类型
 export interface CancelTokenStatic {
   new (executor: CancelExecutor): CancelToken
 

@@ -130,6 +130,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       })
     }
 
+    // 通过promise，实现异步分离，取消请求
     function processCancel(): void {
       if (cancelToken) {
         cancelToken.promise

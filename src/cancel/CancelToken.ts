@@ -11,7 +11,7 @@ export default class CancelToken {
 
   constructor(executor: CancelExecutor) {
     let resolvePromise: ResolvePromise
-
+    // 此时promise处于pending状态
     this.promise = new Promise<Cancel>(resolve => {
       ;(resolvePromise as any) = resolve
     })
@@ -22,6 +22,7 @@ export default class CancelToken {
       }
 
       this.reason = new Cancel(message)
+      // 将pending状态变成resolve
       resolvePromise(this.reason)
     })
   }
