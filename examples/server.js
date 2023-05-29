@@ -9,6 +9,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const path = require('path')
 
+// 启动8090端口服务，实现
 require('./server2')
 
 const app = express()
@@ -189,7 +190,7 @@ function registerMoreRouter () {
   router.get('/more/get', function(req, res) {
     res.json(req.cookies)
   })
-
+   
   router.post('/more/upload', function(req, res) {
     console.log(req.body, req.files)
     res.end('upload success!')

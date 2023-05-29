@@ -9,3 +9,4 @@ Typescript 实现一个基于 promise 的 HTTP 请求库
 - 支持请求的取消
 - JSON 数据的自动转换
 - 客户端防止 XSRF
+- 实现跨域请求

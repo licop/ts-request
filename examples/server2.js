@@ -10,6 +10,7 @@ app.use(cookieParser())
 
 const router = express.Router()
 
+// cors 跨域方案，后端添加这个可以实现跨域
 const cors = {
   'Access-Control-Allow-Origin': 'http://localhost:8089',
   'Access-Control-Allow-Credentials': true,
@@ -19,6 +20,7 @@ const cors = {
 
 router.post('/more/server2', function(req, res) {
   res.set(cors)
+  console.log(req.cookies, 23)
   res.json(req.cookies)
 })
 

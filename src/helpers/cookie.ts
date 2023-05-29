@@ -1,3 +1,4 @@
+// 读取cookie
 const cookie = {
   read(name: string): string | null {
     const match = document.cookie.match(
