@@ -72,6 +72,7 @@ export function buildURL(
 
   return url
 }
+
 // 是否是绝对路径
 export function isAbsoluteURL(url: string): boolean {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)

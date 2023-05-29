@@ -117,6 +117,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // HTTP协议中的 Authorization 请求消息头
       if (auth) {
         headers['Authorization'] =
+          // btoa为JavaScript 的一个内置方法，用于将一个字符串编码为 base-64 格式。
           'Basic ' + btoa(auth.username + ':' + auth.password)
       }
 
