@@ -45,7 +45,7 @@ export default class Axios {
       config = url
     }
 
-    // 把自定义配置和默认配置做合并
+    // 使用策略模式把自定义配置和默认配置做合并
     config = mergeConfig(this.defaults, config)
     config.method = config.method.toLowerCase()
     // 建立promise调用链
@@ -66,6 +66,7 @@ export default class Axios {
     })
     // 开始想请求拦截器传递config，经过请求后变成response，将response向响应拦截器传递
     let promise = Promise.resolve(config)
+
     // 利用promise链式调用，拦截器和请求依次执行
     while (chain.length) {
       const { resolved, rejected } = chain.shift()!

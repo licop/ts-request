@@ -11,8 +11,10 @@ const defaults: AxiosRequestConfig = {
       Accept: 'application/json, text/plain, */*'
     }
   },
+  // 使用token方式处理csrf攻击
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
+
   // 请求数据转换
   transformRequest: [
     function(data: any, headers: any): any {

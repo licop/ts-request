@@ -6,6 +6,7 @@ import { isFormData } from '../helpers/util'
 import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
+  // 将请求调用promise化
   return new Promise((resolve, reject) => {
     const {
       data = null,
